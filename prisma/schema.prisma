@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model ketentuan_loker {
+  id         Int     @id @default(autoincrement())
+  loker_id   Int     
+  posisi     String  @db.VarChar(255)
+  industri   String  @db.VarChar(255)
+  deskripsi  String? @db.Text
+  pendidikan String  @db.VarChar(255)
+  gender     String? @db.VarChar(255)
+  durasi     String  @db.VarChar(255)
+  lokasi     String  @db.VarChar(255)
+  daftar     String  @db.Text
+  kategori   String  @db.VarChar(255)
+  createdAt  DateTime @default(now())
+}
+
+model deskripsi_pekerjaan {
+  deskripsi_id Int     @id @default(autoincrement())
+  jobdesk      String? @db.Text
+  loker_id     Int
+}
+
+model syarat_pekerjaan {
+  syarat_id Int    @id @default(autoincrement())
+  syarat    String @db.VarChar(255)
+  loker_id  Int
+}
