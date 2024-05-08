@@ -16,8 +16,8 @@ model ketentuan_loker {
   pendidikan String  @db.VarChar(255)
   gender     String? @db.VarChar(255)
   durasi     String  @db.VarChar(255)
-  lokasi     String  @db.VarChar(255)
-  daftar     String  @db.Text
+  lokasi     String?  @db.VarChar(255)
+  daftar     String?  @db.Text
   kategori   String  @db.VarChar(255)
   createdAt  DateTime @default(now())
 }
