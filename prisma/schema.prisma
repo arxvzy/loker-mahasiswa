@@ -8,18 +8,17 @@ datasource db {
 }
 
 model ketentuan_loker {
-  id         Int     @id @default(autoincrement())
-  loker_id   Int     
-  posisi     String  @db.VarChar(255)
-  industri   String  @db.VarChar(255)
-  deskripsi  String? @db.Text
-  pendidikan String  @db.VarChar(255)
-  gender     String? @db.VarChar(255)
-  durasi     String  @db.VarChar(255)
-  lokasi     String?  @db.VarChar(255)
-  daftar     String?  @db.Text
-  kategori   String  @db.VarChar(255)
-  createdAt  DateTime @default(now())
+  id                    Int       @id @default(autoincrement())
+  posisi                String    @db.VarChar(255)
+  nama_perusahaan       String    @db.VarChar(255)
+  deskripsi_perusahaan  String?   @db.Text
+  pendidikan            String    @db.VarChar(255)
+  gender                String?   @db.VarChar(255)
+  durasi                String    @db.VarChar(255)
+  alamat                String?   @db.VarChar(255)
+  daftar                String?   @db.Text
+  kategori              String    @db.VarChar(255)
+  createdAt             DateTime  @default(now())
 }
 
 model deskripsi_pekerjaan {
