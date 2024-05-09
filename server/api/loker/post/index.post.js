@@ -1,28 +1,47 @@
 import { prisma } from "~/server/prisma";
 export default defineEventHandler(async (event) => {
-  const id = Date.now();
   const body = await readBody(event);
-  const ketentuan = await prisma.ketentuan_loker.create({
-    data: {
-      loker_id: id,
-      posisi: body.posisi,
-      industri: body.industri,
-      deskripsi: body.deskripsi,
-      pendidikan: body.pendidikan,
-      gender: body.gender,
-      durasi: body.durasi,
-      lokasi: body.lokasi,
-      daftar: body.daftar,
-      kategori: body.kategori,
-    },
-  });
-  const deskripsi = await prisma.deskripsi_pekerjaan.createMany({
-    jobdesk: body.jobdesk,
-    loker_id: id,
-  });
-  const syarat = await prisma.syarat_pekerjaan.createMany({
-    syarat: body.syarat,
-    loker_id: id,
-  });
-  return await { ketentuan, deskripsi, syarat };
+  try {
+    const lokerdb = await prisma.ketentuan_loker.create({
+      data: {
+        posisi: body.posisi,
+        nama_perusahaan: body.nama_perusahaan,
+        deskripsi_perusahaan: body.deskripsi_perusahaan,
+        pendidikan: body.pendidikan,
+        gender: body.gender,
+        durasi: body.durasi,
+        alamat: body.alamat,
+        daftar: body.daftar,
+        kategori: body.kategori,
+      },
+    });
+    if (lokerdb.id) {
+      const jobdesk = [];
+      body.jobdesk.forEach((el) => {
+        jobdesk.push({ jobdesk: el, loker_id: lokerdb.id });
+      });
+      const jobdeskdb = await prisma.deskripsi_pekerjaan.createMany({
+        data: jobdesk,
+      });
+      if (jobdeskdb.count) {
+        const syarat = [];
+        body.syarat.forEach((el) => {
+          syarat.push({ syarat: el, loker_id: lokerdb.id });
+        });
+        const syaratdb = await prisma.syarat_pekerjaan.createMany({
+          data: syarat,
+        });
+        if (syaratdb.count) {
+          return await {
+            success: true,
+            dataLoker: lokerdb,
+            jobdeskCount: jobdeskdb,
+            syaratCount: syaratdb,
+          };
+        } else return { success: false, message: "Gagal Create Table Syarat" };
+      } else return { success: false, message: "Gagal Create Table Jobdesk" };
+    } else return { success: false, message: "Gagal Create Table Loker" };
+  } catch (err) {
+    throw err;
+  }
 });
