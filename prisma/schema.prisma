@@ -3,32 +3,39 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-model ketentuan_loker {
-  id                    Int       @id @default(autoincrement())
-  posisi                String    @db.VarChar(255)
-  nama_perusahaan       String    @db.VarChar(255)
-  deskripsi_perusahaan  String?   @db.Text
-  pendidikan            String    @db.VarChar(255)
-  gender                String?   @db.VarChar(255)
-  durasi                String    @db.VarChar(255)
-  alamat                String?   @db.VarChar(255)
-  daftar                String?   @db.Text
-  kategori              String    @db.VarChar(255)
-  createdAt             DateTime  @default(now())
+model general {
+  id                   Int       @id(map: "lokers_pkey") @unique @default(autoincrement())
+  created_at           DateTime  @default(now()) @db.Timestamptz(6)
+  nama_perusahaan      String?   @db.VarChar
+  posisi               String?   @db.VarChar
+  deskripsi_perusahaan String?
+  pendidikan           String?   @db.VarChar
+  gender               String?   @db.VarChar
+  jenis_waktu          String?   @db.VarChar
+  alamat               String?
+  panduan_daftar       String?
+  kategori             String?   @db.VarChar
+  jobdesk              jobdesk[]
+  syarat               syarat[]
 }
 
-model deskripsi_pekerjaan {
-  deskripsi_id Int     @id @default(autoincrement())
-  jobdesk      String? @db.Text
-  loker_id     Int
+model jobdesk {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  jobdesk    String?  @db.VarChar
+  general_id Int?
+  general    general? @relation(fields: [general_id], references: [id], onDelete: Cascade)
 }
 
-model syarat_pekerjaan {
-  syarat_id Int    @id @default(autoincrement())
-  syarat    String @db.VarChar(255)
-  loker_id  Int
+model syarat {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  syarat     String?  @db.VarChar
+  general_id Int?
+  general    general? @relation(fields: [general_id], references: [id], onDelete: Cascade)
 }
