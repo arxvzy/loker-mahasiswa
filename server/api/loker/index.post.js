@@ -1,15 +1,17 @@
 import { prisma } from "~/server/prisma.js";
 export default defineEventHandler(async (event) => {
-  const raw = await readBody(event);
-  const body = JSON.parse(raw);
+  const body = await readBody(event);
+  const loker = JSON.parse(body);
+  console.log(loker.jobdesk);
+  console.log(loker);
   const data = {
     jobdesk: {
-      create: body.jobdesk,
+      create: loker.jobdesk,
     },
     syarat: {
-      create: body.syarat,
+      create: loker.syarat,
     },
-    ...body.general,
+    ...loker.general,
   };
   try {
     await prisma.general.create({
