@@ -1,12 +1,13 @@
 <script setup>
-const response = await fetch("http://localhost:3000/api/loker/get/all");
-const loker = ref(await response.json());
+const loker = ref([]);
 if (loker.value.success) {
   loker.value.data.forEach((el, index) => {
     el.nomor = index + 1;
     el.class = "text-center";
   });
 }
+const toast = useToast();
+const router = useRouter();
 const columns = [
   {
     key: "nomor",
@@ -48,6 +49,7 @@ const columns = [
   },
 ];
 
+const isLoading = ref(false);
 const q = ref("");
 const selected = ref([]);
 const filteredRows = computed(() => {
@@ -62,46 +64,107 @@ const filteredRows = computed(() => {
   });
 });
 
-const deleteLoker = async (list) => {
+const handleDelete = async (list) => {
   try {
+    isLoading.value = true;
     const deleteId = [];
     list.forEach((el) => {
       deleteId.push({ id: el.id });
     });
-    await fetch("/api/loker/delete", {
+    await fetch("/api/loker", {
       method: "DELETE",
       body: JSON.stringify(deleteId),
     });
+
+    loker.value.data = loker.value.data.filter((el) => {
+      return !list.includes(el);
+    });
+    toast.add({
+      title: "Data berhasil Dihapus!",
+      color: "primary",
+      icon: "i-heroicons-check-circle",
+    });
+    isLoading.value = false;
   } catch (e) {
+    toast.add({
+      title: "Data Gagal Dihapus!",
+      color: "red",
+      icon: "i-heroicons-x-circle",
+    });
+    isLoading.value = false;
     console.log(e);
     throw e;
   }
 };
+const handleUpdate = async () => {
+  const id = selected.value[0].id;
+  router.push(`/admin/edit/${id}`);
+};
+onMounted(async () => {
+  const response = await fetch("/api/loker");
+  const fetched = await response.json();
+  loker.value = fetched;
+});
 </script>
 
 <template>
+  <!-- Open the modal using ID.showModal() method -->
   <UCard class="w-4/5 mx-auto mt-10 border shadow-md">
-    <h1 class="text-center text-xl text-black">Data Loker</h1>
+    <h1 class="text-center text-xl">Data Loker</h1>
   </UCard>
-  <UCard class="w-4/5 mx-auto mt-10 border shadow-md">
-    <div class="flex px-3 justify-between">
-      <UInput
-        v-model="q"
-        name="q"
-        placeholder="Cari..."
-        icon="i-heroicons-magnifying-glass-20-solid"
-        autocomplete="off"
-        :ui="{ icon: { trailing: { pointer: '' } } }"
-      />
-      <UButton
-        color="red"
-        @click.prevent="deleteLoker(selected)"
-        variant="solid"
-        >Hapus</UButton
-      >
+  <UCard class="w-4/5 mx-auto border shadow-md">
+    <div class="mx-auto mt-10">
+      <div class="flex px-3 justify-between">
+        <UInput
+          v-model="q"
+          name="q"
+          placeholder="Cari..."
+          icon="i-heroicons-magnifying-glass-20-solid"
+          autocomplete="off"
+          :ui="{ icon: { trailing: { pointer: '' } } }"
+        />
+        <div class="flex justify-end gap-4">
+          <UButton
+            color="primary"
+            size="lg"
+            variant="solid"
+            class="px-5"
+            @click.prevent="handleUpdate"
+            :disabled="selected.length != 1"
+            >Edit</UButton
+          >
+          <UButton
+            color="red"
+            size="lg"
+            onclick="my_modal_5.showModal()"
+            variant="solid"
+            :disabled="selected.length === 0"
+            >Hapus</UButton
+          >
+        </div>
+        <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
+          <div class="modal-box">
+            <h3 class="font-bold text-lg">Konfirmasi Penghapusan</h3>
+            <p class="py-4">
+              Apakah anda yakin ingin menghapus data yang dipilih?
+            </p>
+            <div class="modal-action">
+              <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn btn-ghost mr-2">Tidak</button>
+                <button
+                  class="btn btn-error px-6"
+                  @click="handleDelete(selected)"
+                >
+                  Ya
+                </button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+      </div>
     </div>
-  </UCard>
-  <UCard class="w-4/5 mx-auto mt-5 border shadow-md">
+    <div class="border mt-3"></div>
     <div>
       <UTable :columns="columns" v-model="selected" :rows="filteredRows" />
     </div>
