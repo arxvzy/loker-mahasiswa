@@ -3,11 +3,11 @@ const route = useRoute();
 const path = ref(route.path.split("/")[1]);
 </script>
 <template>
-  <div class="drawer z-[999]">
+  <div class="drawer z-[999] text-slate-300">
     <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
       <!-- Navbar -->
-      <div class="w-full navbar bg-base-300">
+      <div class="w-full navbar bg-slate-800">
         <div class="flex-none lg:hidden">
           <label
             for="my-drawer-3"
@@ -29,7 +29,9 @@ const path = ref(route.path.split("/")[1]);
             </svg>
           </label>
         </div>
-        <div class="flex-1 px-2 mx-2">Loker Mahasiswa</div>
+        <div class="flex-1 px-2 mx-2 font-montserrat font-bold text-2xl">
+          <a href="/"> Loker Mahasiswa </a>
+        </div>
         <div class="flex-none hidden lg:block">
           <ul class="menu menu-horizontal">
             <!-- Navbar menu content here -->
