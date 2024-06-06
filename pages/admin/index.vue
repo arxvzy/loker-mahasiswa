@@ -1,11 +1,5 @@
 <script setup>
 const loker = ref([]);
-if (loker.value.success) {
-  loker.value.data.forEach((el, index) => {
-    el.nomor = index + 1;
-    el.class = "text-center";
-  });
-}
 const toast = useToast();
 const router = useRouter();
 const columns = [
@@ -43,7 +37,7 @@ const columns = [
   },
   {
     key: "created_at",
-    label: "Tanggal Dibuat (UTC)",
+    label: "Tanggal Diposting",
     sortable: true,
     class: "text-center ",
   },
@@ -101,15 +95,31 @@ const handleUpdate = async () => {
   router.push(`/admin/edit/${id}`);
 };
 onMounted(async () => {
-  const response = await fetch("/api/loker");
-  const fetched = await response.json();
-  loker.value = fetched;
+  const response = await fetch("/api/loker").then((res) => res.json());
+  loker.value = response;
+  if (loker.value.success) {
+    loker.value.data.forEach((el, index) => {
+      el.nomor = index + 1;
+      el.class = "text-center";
+      el.created_at = new Date(el.created_at).toLocaleString("id-ID", {
+        timeZone: "Asia/Jakarta",
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false,
+      });
+    });
+  }
 });
 </script>
 
 <template>
   <!-- Open the modal using ID.showModal() method -->
-  <UCard class="w-4/5 mx-auto mt-10 border shadow-md">
+  <UCard class="w-4/5 mx-auto border shadow-md">
     <h1 class="text-center text-xl">Data Loker</h1>
   </UCard>
   <UCard class="w-4/5 mx-auto border shadow-md">

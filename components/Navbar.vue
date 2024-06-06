@@ -45,6 +45,9 @@ const path = ref(route.path.split("/")[1]);
                 >Manage Loker</NuxtLink
               >
             </li>
+            <li>
+              <NuxtLink to="/login" active-class="active">Login</NuxtLink>
+            </li>
           </ul>
         </div>
       </div>

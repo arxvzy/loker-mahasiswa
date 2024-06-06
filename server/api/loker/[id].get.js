@@ -11,10 +11,6 @@ export default defineEventHandler(async (event) => {
         syarat: true,
       },
     });
-    // const loker = lokerQuery.map((entry) => ({
-    //   ...entry,
-    //   id: parseInt(entry.id),
-    // }));
     return {
       success: true,
       data: response,

@@ -3,7 +3,7 @@ const props = defineProps([
   "posisi",
   "nama_perusahaan",
   "pendidikan",
-  "jenis_waktu",
+  "status_kerja",
   "kategori",
   "gender",
   "gambar_loker",
@@ -48,7 +48,7 @@ const props = defineProps([
           </div>
           <div class="flex items-center gap-1">
             <Icon name="material-symbols:work-history-outline" />
-            <p>{{ props.jenis_waktu }}</p>
+            <p>{{ props.status_kerja }}</p>
           </div>
           <div class="flex items-center gap-1">
             <Icon name="bi:gender-ambiguous" />
