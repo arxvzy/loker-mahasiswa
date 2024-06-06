@@ -1,10 +1,12 @@
 <script setup>
+const supabase = useSupabaseClient();
 const toast = useToast();
 const router = useRouter();
 const route = useRoute();
+const form = new FormData();
 
 const allGender = ["Pria", "Wanita", "Pria/Wanita"];
-const allWaktu = ["Full Time", "Part Time", "Magang", "Freelance"];
+const allStatus = ["Full Time", "Part Time", "Magang", "Freelance"];
 const allKategori = ["Semarang", "Jogja", "Medan", "Semua Daerah"];
 const allPendidikan = [
   "SD",
@@ -18,6 +20,7 @@ const jobdeskCount = ref(1);
 const syaratCount = ref(1);
 const isLoading = ref(false);
 const isUpdate = ref(route.params.action == "edit");
+const imageFile = ref();
 
 const jobdesks = ref([]);
 const syarats = ref([]);
@@ -28,10 +31,11 @@ const formData = ref({
     deskripsi_perusahaan: "",
     pendidikan: "",
     gender: "",
-    jenis_waktu: "",
+    status_kerja: "",
     alamat: "",
     panduan_daftar: "",
     kategori: "",
+    image_link: "",
   },
   jobdesk: [],
   syarat: [],
@@ -39,48 +43,43 @@ const formData = ref({
 
 const handlePost = async () => {
   isLoading.value = true;
-  jobdesks.value.forEach((el) => {
-    formData.value.jobdesk.push({ jobdesk: el });
-  });
-  syarats.value.forEach((el) => {
-    formData.value.syarat.push({ syarat: el });
-  });
+  setFormData();
   try {
-    await fetch("/api/loker", {
-      method: "POST",
-      body: JSON.stringify(formData.value),
-    })
-      .then((json) => json.json())
-      .then((res) => {
-        if (res.success) {
-          toast.add({
-            title: "Loker Berhasil Diposting!",
-            color: "primary",
-            icon: "i-heroicons-check-circle",
-          });
-          router.push("/admin");
-        } else {
-          toast.add({
-            title: "Loker Gagal Diposting!",
-            color: "red",
-            icon: "i-heroicons-x-circle",
-          });
-        }
-      });
-  } catch (error) {
-    isLoading.value = false;
+    const { error } = await supabase.storage
+      .from("loker-image")
+      .upload(`images/${Date.now()}.png`, imageFile.value);
     console.log(error);
+    // await fetch("/api/loker/image", {
+    //   method: "POST",
+    //   body: form,
+    // });
+    //   .then((json) => json.json())
+    //   .then((res) => {
+    //     if (res.success) {
+    //       toast.add({
+    //         title: "Loker Berhasil Diposting!",
+    //         color: "primary",
+    //         icon: "i-heroicons-check-circle",
+    //       });
+    //       router.push("/admin");
+    //     } else {
+    //       toast.add({
+    //         title: "Loker Gagal Diposting!",
+    //         color: "red",
+    //         icon: "i-heroicons-x-circle",
+    //       });
+    //     }
+    //   });
+  } catch (error) {
+    throw error;
+  } finally {
+    isLoading.value = false;
   }
 };
 
 const handleUpdate = async () => {
   isLoading.value = true;
-  jobdesks.value.forEach((el) => {
-    formData.value.jobdesk.push({ jobdesk: el });
-  });
-  syarats.value.forEach((el) => {
-    formData.value.syarat.push({ syarat: el });
-  });
+
   try {
     await fetch(`/api/loker/${route.params.id}`, {
       method: "PATCH",
@@ -96,7 +95,6 @@ const handleUpdate = async () => {
           });
           router.push("/admin");
         } else {
-          isLoading.value = false;
           toast.add({
             title: "Loker Gagal Di-Update!",
             color: "red",
@@ -106,7 +104,32 @@ const handleUpdate = async () => {
       });
   } catch (error) {
     throw error;
+  } finally {
+    isLoading.value = false;
   }
+};
+
+const setFormData = () => {
+  // jobdesks.value.forEach((el) => {
+  //   formData.value.jobdesk.push({ jobdesk: el });
+  // });
+  // syarats.value.forEach((el) => {
+  //   formData.value.syarat.push({ syarat: el });
+  // });
+  // for (let key in formData.value.general) {
+  //   form.append(`general[${key}]`, formData.value.general[key]);
+  // }
+  // formData.value.jobdesk.forEach((item, index) => {
+  //   form.append(`jobdesk[${index}]`, item);
+  // });
+  // formData.value.syarat.forEach((item, index) => {
+  //   form.append(`syarat[${index}]`, item);
+  // });
+  form.append("image", imageFile.value);
+};
+
+const setImageFile = (e) => {
+  imageFile.value = e.target.files[0];
 };
 
 onMounted(async () => {
@@ -126,7 +149,7 @@ onMounted(async () => {
       response.data.deskripsi_perusahaan;
     formData.value.general.pendidikan = response.data.pendidikan;
     formData.value.general.gender = response.data.gender;
-    formData.value.general.jenis_waktu = response.data.jenis_waktu;
+    formData.value.general.status_kerja = response.data.status_kerja;
     formData.value.general.alamat = response.data.alamat;
     formData.value.general.panduan_daftar = response.data.panduan_daftar;
     formData.value.general.kategori = response.data.kategori;
@@ -141,8 +164,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="font-normal">
-    <UCard class="w-1/2 mx-auto mt-10 border shadow-md">
+  <div class="font-normal text-lg">
+    <UCard class="w-1/2 mx-auto border shadow-md">
       <h1 class="text-center text-xl">Pasang Loker</h1>
     </UCard>
     <UCard class="w-1/2 mx-auto mt-10 border shadow-xl">
@@ -192,12 +215,12 @@ onMounted(async () => {
             />
           </div>
           <div class="mb-5">
-            <label>Jenis Waktu Kerja</label>
+            <label>Status Pekerjaan</label>
             <USelect
-              v-model="formData.general.jenis_waktu"
+              v-model="formData.general.status_kerja"
               variant="outline"
-              :options="allWaktu"
-              placeholder="Pilih Jenis Waktu kerja"
+              :options="allStatus"
+              placeholder="Pilih Status kerja"
               size="md"
             />
           </div>
@@ -277,6 +300,14 @@ onMounted(async () => {
                 />
               </svg>
             </button>
+          </div>
+          <div class="mb-5 flex flex-col">
+            <label>Gambar Loker</label>
+            <input
+              type="file"
+              class="file-input file-input-bordered file-input-sm file-input-primary w-full max-w-xs"
+              @change="setImageFile"
+            />
           </div>
           <div class="mt-5 flex justify-center">
             <UButton

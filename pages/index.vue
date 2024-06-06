@@ -46,7 +46,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="md:w-3/4 lg:w-1/2 w-4/5 mx-auto pt-10">
+  <div class="md:w-3/4 lg:w-1/2 w-4/5 mx-auto">
     <h2 class="text-2xl"><b>Lowongan Terbaru</b></h2>
     <div class="flex flex-col" v-for="loker in lokers">
       <a :href="`/loker/${loker.id}`" :title="loker.title">
@@ -55,7 +55,7 @@ onMounted(async () => {
           :posisi="loker.posisi"
           :nama_perusahaan="loker.nama_perusahaan"
           :pendidikan="loker.pendidikan"
-          :jenis_waktu="loker.jenis_waktu"
+          :status_kerja="loker.status_kerja"
           :gender="loker.gender"
           :kategori="loker.kategori"
           :waktu_post="loker.waktu_post"

@@ -1,7 +1,7 @@
 <template>
   <div class="bg-slate-200 font-poppins text-slate-900 text-xl font-medium">
     <Navbar />
-    <div class="container">
+    <div class="container mt-10">
       <NuxtPage />
     </div>
     <UNotifications />

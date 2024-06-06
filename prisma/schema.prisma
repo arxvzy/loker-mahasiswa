@@ -11,15 +11,16 @@ datasource db {
 model general {
   id                   Int       @id(map: "lokers_pkey") @unique @default(autoincrement())
   created_at           DateTime  @default(now()) @db.Timestamptz(6)
-  nama_perusahaan      String?   @db.VarChar
-  posisi               String?   @db.VarChar
+  nama_perusahaan      String    @db.VarChar
+  posisi               String    @db.VarChar
   deskripsi_perusahaan String?
-  pendidikan           String?   @db.VarChar
-  gender               String?   @db.VarChar
-  jenis_waktu          String?   @db.VarChar
+  pendidikan           String    @db.VarChar
+  gender               String    @db.VarChar
+  status_kerja         String    @db.VarChar
   alamat               String?
-  panduan_daftar       String?
-  kategori             String?   @db.VarChar
+  panduan_daftar       String
+  kategori             String    @db.VarChar
+  image_link           String?   @db.VarChar
   jobdesk              jobdesk[]
   syarat               syarat[]
 }
