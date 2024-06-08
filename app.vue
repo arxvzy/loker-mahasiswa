@@ -1,7 +1,10 @@
+<script setup>
+const user = useSupabaseUser();
+</script>
 <template>
   <div class="bg-slate-200 font-poppins text-slate-900 text-xl font-medium">
-    <Navbar />
-    <div class="container mt-10">
+    <Navbar :user="user" />
+    <div class="container mt-10 mx-auto">
       <NuxtPage />
     </div>
     <UNotifications />

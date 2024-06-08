@@ -1,4 +1,7 @@
 <script setup>
+definePageMeta({
+  middleware: ["auth"],
+});
 const loker = ref([]);
 const toast = useToast();
 const router = useRouter();

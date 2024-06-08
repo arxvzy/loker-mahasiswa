@@ -1,6 +1,8 @@
 <script setup>
 import Card from "../components/Card.vue";
+import Skeleton from "../components/Skeleton.vue";
 const lokers = ref([]);
+const isFetching = ref(true);
 
 function timeSince(timestamp) {
   const now = new Date();
@@ -37,17 +39,22 @@ function timeSince(timestamp) {
 
 onMounted(async () => {
   const response = await fetch("/api/loker").then((res) => res.json());
+  isFetching.value = false;
   lokers.value = response.data;
   lokers.value.forEach((element) => {
     element.title = `Lowongan Kerja ${element.posisi} di ${element.nama_perusahaan} - ${element.kategori}`;
     element.waktu_post = timeSince(element.created_at);
-    element.gambar_loker = "https://source.unsplash.com/random/640x360/?work";
   });
 });
 </script>
 <template>
   <div class="md:w-3/4 lg:w-1/2 w-4/5 mx-auto">
     <h2 class="text-2xl"><b>Lowongan Terbaru</b></h2>
+
+    <div v-if="isFetching" v-for="i in 3" class="my-3">
+      <Skeleton />
+    </div>
+
     <div class="flex flex-col" v-for="loker in lokers">
       <a :href="`/loker/${loker.id}`" :title="loker.title">
         <Card
@@ -59,7 +66,7 @@ onMounted(async () => {
           :gender="loker.gender"
           :kategori="loker.kategori"
           :waktu_post="loker.waktu_post"
-          :gambar_loker="loker.gambar_loker"
+          :image_link="loker.image_link"
         />
       </a>
     </div>

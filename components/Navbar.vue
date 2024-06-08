@@ -1,6 +1,19 @@
 <script setup>
+const props = defineProps(["user"]);
 const route = useRoute();
 const path = ref(route.path.split("/")[1]);
+const toast = useToast();
+
+const logout = async () => {
+  const { error } = await useSupabaseClient().auth.signOut();
+  if (!error) {
+    toast.add({
+      title: "Logout Berhasil!",
+      color: "primary",
+      icon: "i-heroicons-check-circle",
+    });
+  }
+};
 </script>
 <template>
   <div class="drawer z-[999] text-slate-300">
@@ -29,26 +42,31 @@ const path = ref(route.path.split("/")[1]);
             </svg>
           </label>
         </div>
-        <div class="flex-1 px-2 mx-2 font-montserrat font-bold text-2xl">
-          <a href="/"> Loker Mahasiswa </a>
-        </div>
-        <div class="flex-none hidden lg:block">
-          <ul class="menu menu-horizontal">
-            <!-- Navbar menu content here -->
-            <li v-if="path == 'admin'">
-              <NuxtLink to="/admin/post" active-class="active"
-                >Posting Loker</NuxtLink
-              >
-            </li>
-            <li v-if="path == 'admin'">
-              <NuxtLink to="/admin" active-class="active"
-                >Manage Loker</NuxtLink
-              >
-            </li>
-            <li>
-              <NuxtLink to="/login" active-class="active">Login</NuxtLink>
-            </li>
-          </ul>
+        <div class="flex justify-between mx-auto w-3/4">
+          <div class="px-2 mx-2 font-montserrat font-bold text-2xl">
+            <NuxtLink to="/"> Loker Mahasiswa </NuxtLink>
+          </div>
+          <div class="hidden lg:block">
+            <ul class="menu menu-horizontal">
+              <!-- Navbar menu content here -->
+              <li v-if="props.user">
+                <NuxtLink to="/admin/post" active-class="active"
+                  >Posting Loker</NuxtLink
+                >
+              </li>
+              <li v-if="props.user">
+                <NuxtLink to="/admin" active-class="active"
+                  >Manage Loker</NuxtLink
+                >
+              </li>
+              <li v-if="!props.user">
+                <NuxtLink to="/login" active-class="active">Login</NuxtLink>
+              </li>
+              <li v-if="props.user">
+                <button onclick="my_modal_1.showModal()">Logout</button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -65,4 +83,17 @@ const path = ref(route.path.split("/")[1]);
       </ul>
     </div>
   </div>
+  <dialog id="my_modal_1" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">Konfirmasi Log Out</h3>
+      <p class="py-4">Apakah anda yakin ingin Log Out?</p>
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button in form, it will close the modal -->
+          <button class="btn btn-ghost mr-2">Tidak</button>
+          <button class="btn btn-error px-6" @click="logout">Ya</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
 </template>

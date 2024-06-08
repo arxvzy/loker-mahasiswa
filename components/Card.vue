@@ -6,7 +6,7 @@ const props = defineProps([
   "status_kerja",
   "kategori",
   "gender",
-  "gambar_loker",
+  "image_link",
   "waktu_post",
 ]);
 </script>
@@ -17,7 +17,7 @@ const props = defineProps([
     <div class="hidden sm:block sm:basis-56">
       <img
         alt=""
-        :src="props.gambar_loker"
+        :src="props.image_link"
         class="aspect-square h-full w-full object-cover"
       />
     </div>
