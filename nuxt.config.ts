@@ -11,5 +11,8 @@ export default defineNuxtConfig({
   colorMode: {
     preference: "light",
   },
-  modules: ["nuxt-icon", "@nuxt/ui"],
+  modules: ["nuxt-icon", "@nuxt/ui", "@nuxtjs/supabase"],
+  supabase: {
+    redirect: false,
+  },
 });

@@ -1,9 +1,10 @@
 <script setup>
+definePageMeta({
+  middleware: ["auth"],
+});
 const supabase = useSupabaseClient();
 const toast = useToast();
-const router = useRouter();
 const route = useRoute();
-const form = new FormData();
 
 const allGender = ["Pria", "Wanita", "Pria/Wanita"];
 const allStatus = ["Full Time", "Part Time", "Magang", "Freelance"];
@@ -42,44 +43,55 @@ const formData = ref({
 });
 
 const handlePost = async () => {
-  isLoading.value = true;
-  setFormData();
-  try {
-    const { error } = await supabase.storage
-      .from("loker-image")
-      .upload(`images/${Date.now()}.png`, imageFile.value);
-    console.log(error);
-    // await fetch("/api/loker/image", {
-    //   method: "POST",
-    //   body: form,
-    // });
-    //   .then((json) => json.json())
-    //   .then((res) => {
-    //     if (res.success) {
-    //       toast.add({
-    //         title: "Loker Berhasil Diposting!",
-    //         color: "primary",
-    //         icon: "i-heroicons-check-circle",
-    //       });
-    //       router.push("/admin");
-    //     } else {
-    //       toast.add({
-    //         title: "Loker Gagal Diposting!",
-    //         color: "red",
-    //         icon: "i-heroicons-x-circle",
-    //       });
-    //     }
-    //   });
-  } catch (error) {
-    throw error;
-  } finally {
-    isLoading.value = false;
+  if (imageFile.value) {
+    isLoading.value = true;
+    setFormData();
+    const ext = imageFile.value.name.split(".").pop();
+    try {
+      const { data, error } = await supabase.storage
+        .from("loker-image")
+        .upload(`images/${Date.now()}.${ext}`, imageFile.value);
+
+      formData.value.general.image_link = `https://dgcezwctryooeaujgfzp.supabase.co/storage/v1/object/public/${data.fullPath}`;
+
+      await fetch("/api/loker", {
+        method: "POST",
+        body: JSON.stringify(formData.value),
+      })
+        .then((json) => json.json())
+        .then((res) => {
+          if (res.success) {
+            toast.add({
+              title: "Loker Berhasil Diposting!",
+              color: "primary",
+              icon: "i-heroicons-check-circle",
+            });
+            navigateTo.push("/admin");
+          } else {
+            toast.add({
+              title: "Loker Gagal Diposting!",
+              color: "red",
+              icon: "i-heroicons-x-circle",
+            });
+          }
+        });
+    } catch (error) {
+      throw error;
+    } finally {
+      isLoading.value = false;
+    }
+  } else {
+    toast.add({
+      title: "Kesalahan Input!",
+      color: "red",
+      icon: "i-heroicons-x-circle",
+    });
   }
 };
 
 const handleUpdate = async () => {
   isLoading.value = true;
-
+  setFormData();
   try {
     await fetch(`/api/loker/${route.params.id}`, {
       method: "PATCH",
@@ -93,7 +105,7 @@ const handleUpdate = async () => {
             color: "primary",
             icon: "i-heroicons-check-circle",
           });
-          router.push("/admin");
+          navigateTo.push("/admin");
         } else {
           toast.add({
             title: "Loker Gagal Di-Update!",
@@ -110,22 +122,12 @@ const handleUpdate = async () => {
 };
 
 const setFormData = () => {
-  // jobdesks.value.forEach((el) => {
-  //   formData.value.jobdesk.push({ jobdesk: el });
-  // });
-  // syarats.value.forEach((el) => {
-  //   formData.value.syarat.push({ syarat: el });
-  // });
-  // for (let key in formData.value.general) {
-  //   form.append(`general[${key}]`, formData.value.general[key]);
-  // }
-  // formData.value.jobdesk.forEach((item, index) => {
-  //   form.append(`jobdesk[${index}]`, item);
-  // });
-  // formData.value.syarat.forEach((item, index) => {
-  //   form.append(`syarat[${index}]`, item);
-  // });
-  form.append("image", imageFile.value);
+  jobdesks.value.forEach((el) => {
+    formData.value.jobdesk.push({ jobdesk: el });
+  });
+  syarats.value.forEach((el) => {
+    formData.value.syarat.push({ syarat: el });
+  });
 };
 
 const setImageFile = (e) => {
@@ -143,21 +145,13 @@ onMounted(async () => {
     if (response.data.jobdesk.length > 0) {
       jobdeskCount.value = response.data.jobdesk.length;
     }
-    formData.value.general.posisi = response.data.posisi;
-    formData.value.general.nama_perusahaan = response.data.nama_perusahaan;
-    formData.value.general.deskripsi_perusahaan =
-      response.data.deskripsi_perusahaan;
-    formData.value.general.pendidikan = response.data.pendidikan;
-    formData.value.general.gender = response.data.gender;
-    formData.value.general.status_kerja = response.data.status_kerja;
-    formData.value.general.alamat = response.data.alamat;
-    formData.value.general.panduan_daftar = response.data.panduan_daftar;
-    formData.value.general.kategori = response.data.kategori;
+
+    formData.value = response.data;
     response.data.jobdesk.forEach((el) => {
-      jobdesks.value.push(el.jobdesk);
+      jobdesks.value.push(el);
     });
     response.data.syarat.forEach((el) => {
-      syarats.value.push(el.syarat);
+      syarats.value.push(el);
     });
   }
 });
@@ -303,6 +297,42 @@ onMounted(async () => {
           </div>
           <div class="mb-5 flex flex-col">
             <label>Gambar Loker</label>
+            <div
+              class="max-w-sm p-6 mb-4 bg-gray-100 border-dashed border-2 border-gray-400 rounded-lg items-center mx-auto text-center cursor-pointer"
+            >
+              <input id="upload" type="file" class="hidden" accept="image/*" />
+              <label for="upload" class="cursor-pointer">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-8 h-8 text-gray-700 mx-auto mb-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                  />
+                </svg>
+                <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-700">
+                  Upload picture
+                </h5>
+                <p class="font-normal text-sm text-gray-400 md:px-6">
+                  Choose photo size should be less than
+                  <b class="text-gray-600">2mb</b>
+                </p>
+                <p class="font-normal text-sm text-gray-400 md:px-6">
+                  and should be in
+                  <b class="text-gray-600">Image</b> format.
+                </p>
+                <span
+                  id="filename"
+                  class="text-gray-500 bg-gray-200 z-50"
+                ></span>
+              </label>
+            </div>
             <input
               type="file"
               class="file-input file-input-bordered file-input-sm file-input-primary w-full max-w-xs"
