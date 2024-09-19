@@ -1,5 +1,5 @@
 <header class="bg-[#82bfab] shadow-lg">
-    <div class="w-11/12 md:w-10/12 flex justify-between h-16 items-center md:gap-4 mx-auto">
+    <div class="w-11/12 flex justify-between h-16 items-center mx-auto">
         <a class="block text-teal-600" href="/">
             <span class="sr-only">Home</span>
             <img src="/images/logo.png" class="h-8 md:h-14 object-scale-down" alt="" />
