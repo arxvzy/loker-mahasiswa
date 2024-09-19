@@ -74,13 +74,14 @@
                     </ul>
                     <hr class="w-full my-4">
                 @endif
-                <p class="font-medium text-wrap">{{ $loker->panduan_daftar }}</p>
+                <h4 class="text-lg font-semibold">Cara Melamar</h4>
+                <p class="text-wrap">{{ $loker->panduan_daftar }}</p>
                 @if ($loker->email || $loker->telepon || $loker->website)
                     <h4 class="text-lg font-medium pt-2">Kirim Ke:</h4>
                     @if ($loker->email)
                         <div class="flex items-center gap-2">
                             <x-bi-envelope />
-                            <p id="email" class="text-slate-600">{{ $loker->email }}</p>
+                            <p id="email" class="text-slate-600 overflow-x-auto">{{ $loker->email }}</p>
                             <button class="copy" data-clipboard-target="#email">
                                 <x-bi-copy alt="Copy to clipboard" class="w-3" alt="Copy" />
                             </button>
