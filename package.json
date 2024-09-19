@@ -4,7 +4,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "start": "concurrently \"php artisan serve --host=192.168.102.243 --port=8000\" \"npm run dev\"  "
+        "start": "concurrently \"php artisan serve\" \"npm run dev\"  "
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.7",
