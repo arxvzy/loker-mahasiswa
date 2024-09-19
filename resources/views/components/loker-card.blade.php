@@ -2,7 +2,8 @@
     <div class="md:basis-56 w-1/3 flex flex-col">
         <img alt="Lowongan Kerja {{ $loker->posisi }} di {{ $loker->nama_perusahaan }} - {{ $loker->category->name }}"
             data-src="/images/{{ $loker->images[0]->image_link }}" class="lazyload aspect-square object-cover md:h-2/3" />
-        <div class="mt-6 w-full bg-slate-700 rounded-lg">
+        <div
+            class="mt-6 w-full bg-slate-700 rounded-lg hover:bg-slate-600 hover:scale-105 transition ease-in-out duration-100">
             <a class="btn w-full btn-ghost btn-sm text-xs font-light text-white"
                 href="{{ route('loker.show', $loker->id) }}"
                 title="Lowongan Kerja {{ $loker->posisi }} di {{ $loker->nama_perusahaan }} - {{ $loker->category->name }}">Lihat
