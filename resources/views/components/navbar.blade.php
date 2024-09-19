@@ -1,11 +1,11 @@
 <header class="bg-[#82bfab] shadow-lg">
-    <div class="w-full md:w-10/12  flex justify-between h-16 items-center md:gap-4 mx-2 md:mx-auto">
+    <div class="w-11/12 md:w-10/12 flex justify-between h-16 items-center md:gap-4 mx-auto">
         <a class="block text-teal-600" href="/">
             <span class="sr-only">Home</span>
             <img src="/images/logo.png" class="h-8 md:h-14 object-scale-down" alt="" />
         </a>
 
-        <div class="min-h-screen flex items-center justify-center mr-6">
+        <div class="min-h-screen flex items-center justify-center">
             <div class="relative inline-block text-left">
                 <button id="dropdown-button"
                     class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md shadow-xl border-2 transition active:shadow active:scale-95">
