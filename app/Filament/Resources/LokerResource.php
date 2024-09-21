@@ -14,7 +14,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
+use Rawilk\FilamentQuill\Enums\ToolbarButton;
 use App\Filament\Resources\LokerResource\Pages;
+use Rawilk\FilamentQuill\Filament\Forms\Components\QuillEditor;
 use Filament\Tables\Actions\DeleteAction as ActionsDeleteAction;
 
 class LokerResource extends Resource
@@ -51,7 +53,7 @@ class LokerResource extends Resource
                     ->native(false)
                     ->required(),
                 Select::make('status_kerja')
-                    ->options(['Full Time' => 'Full Time', 'Part Time' => 'Part Time', 'Freelance' => 'Freelance', 'Magang' => 'Magang','Part Time & Full Time' => 'Part Time & Full Time'])
+                    ->options(['Full Time' => 'Full Time', 'Part Time' => 'Part Time', 'Freelance' => 'Freelance', 'Magang' => 'Magang', 'Part Time & Full Time' => 'Part Time & Full Time'])
                     ->native(false)
                     ->required(),
                 TextInput::make('alamat')
@@ -95,18 +97,21 @@ class LokerResource extends Resource
                             ->required(),
                     )
                     ->addActionLabel('Tambah Kolom Image'),
-                Repeater::make('syarats')
-                    ->relationship('syarats')
-                    ->simple(
-                        TextInput::make('syarat')
-                    )
-                    ->addActionLabel('Tambah Kolom Syarat'),
                 Repeater::make('jobdesks')
                     ->relationship('jobdesks')
                     ->simple(
                         TextInput::make('jobdesk'),
                     )
                     ->addActionLabel('Tambah Kolom Jobdesk'),
+                Repeater::make('syarats')
+                    ->relationship('syarats')
+                    ->columnSpanFull()
+                    ->simple(
+                        QuillEditor::make('syarat')
+                            ->columnSpanFull()
+                            ->disableToolbarButtons([ToolbarButton::Image])
+                    )
+                    ->addActionLabel('Tambah Kolom Syarat'),
             ]);
     }
 

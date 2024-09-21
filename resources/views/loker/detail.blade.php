@@ -56,13 +56,18 @@
                     </tbody>
                 </table>
                 <hr class="w-full my-4">
-                @if ($loker->syarats->count() > 0)
+                @if (count($loker->syarats) > 0)
                     <h4 class="text-lg font-semibold">Kualifikasi</h4>
-                    <ul class="list-disc pl-5 text-slate-600">
-                        @foreach ($loker->syarats as $syarat)
-                            <li>{{ $syarat->syarat }}</li>
-                        @endforeach
-                    </ul>
+                    @if (count($loker->syarats) > 1)
+                        <ul class="list-disc pl-5 text-slate-600">
+                            @foreach ($loker->syarats as $syarat)
+                                <li>{{ $syarat->syarat }}</li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <div class="prose-li:list-disc prose-li:list-inside prose-strong:font-semibold text-slate-600">
+                            {!! $syarat->syarat !!}</div>
+                    @endif
                     <hr class="w-full my-4">
                 @endif
                 @if ($loker->jobdesks->count() > 0)
