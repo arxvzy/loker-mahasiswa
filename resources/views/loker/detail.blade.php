@@ -66,7 +66,7 @@
                         </ul>
                     @else
                         <div class="prose-li:list-disc prose-li:list-inside prose-strong:font-semibold text-slate-600">
-                            {!! $syarat->syarat !!}</div>
+                            {!! $loker->syarats[0]->syarat !!}</div>
                     @endif
                     <hr class="w-full my-4">
                 @endif
