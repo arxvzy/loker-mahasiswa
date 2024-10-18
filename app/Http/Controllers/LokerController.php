@@ -71,6 +71,7 @@ class LokerController extends Controller
     {
         $loker = Loker::find($id);
         $categories = Category::take(9)->get();
+        $loker->increment('pengunjung');
         return view('loker.detail', compact('loker', 'categories'));
     }
 }
