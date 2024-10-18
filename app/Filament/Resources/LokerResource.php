@@ -136,13 +136,16 @@ class LokerResource extends Resource
                     ->sortable()
                     ->limit(15),
                 TextColumn::make('category.name')
-                    ->label('Kategori Wilayah')
+                    ->label('Wilayah')
                     ->searchable()
                     ->sortable()
                     ->limit(10),
                 ImageColumn::make('images.image_link')
                     ->disk('images')
                     ->visibility('private'),
+                TextColumn::make('pengunjung')
+                    ->label('Pengunjung')
+                    ->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([

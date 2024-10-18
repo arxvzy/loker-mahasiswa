@@ -25,6 +25,7 @@ class Loker extends Model
         'email',
         'telepon',
         'website',
+        'pengunjung'
     ];
 
     public function syarats(): HasMany
