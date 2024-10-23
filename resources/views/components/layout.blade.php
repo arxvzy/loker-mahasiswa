@@ -16,9 +16,11 @@
     <title>@yield('title')</title>
     <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
     @vite('resources/css/app.css')
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
     </style>
+    <script src="/js/lazysizes.min.js"></script>
 </head>
 
 <body class="bg-slate-200 font-poppins text-slate-800 text-xl font-medium">
@@ -41,9 +43,36 @@
             <p class="text-xs md:text-base text-center font-bold leading-4">Pasang Loker!</p>
         </a>
     </div>
-    <script src="/js/lazysizes.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
     <script src="/js/clipboard.min.js"></script>
     <script>
+        if (document.getElementById('loker-slide')) {
+            new Splide('#loker-slide', {
+                type: 'loop',
+                perPage: 4,
+                breakpoints: {
+                    1024: {
+                        perPage: 3,
+
+                    },
+                    767: {
+                        perPage: 2,
+
+                    },
+                    640: {
+                        perPage: 1,
+
+                    },
+                },
+                perMove: 1,
+                pagination: false,
+                gap: '1rem',
+                autoplay: true,
+                cover: false,
+                padding: '5rem',
+                lazyLoad: 'nearby',
+            }).mount();
+        }
         new ClipboardJS('.copy');
     </script>
 </body>

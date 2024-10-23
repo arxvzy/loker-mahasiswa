@@ -5,6 +5,7 @@
     <div class="mx-auto w-11/12">
         <x-header />
         <x-search-card :categories="$categories" />
+        <x-carousel :lokers="$carousel" />
         <h2 class="text-2xl mt-10" id="loker"><b>Lowongan Terbaru</b></h2>
         <div class="flex justify-between mx-auto mt-4">
             <div class="lg:w-7/12 w-full flex flex-col gap-y-4">
