@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Filament\Resources\CategoryResource;
-use App\Models\Category;
+use Carbon\Carbon;
 use App\Models\Loker;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Filament\Resources\CategoryResource;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class LokerController extends Controller
 {
@@ -59,8 +60,12 @@ class LokerController extends Controller
 
         $lokers = $lokers->paginate(20)->withQueryString();
         $categories = Category::all();
+        
+        // get last 7 days record order by most viewers for carousel
+        $date = Carbon::now()->subDays(7);
+        $carousel = Loker::where('created_at', '>=', $date)->orderBy('pengunjung', 'desc')->take(10)->get();
 
-        return view('loker.index', compact('lokers', 'categories'));
+        return view('loker.index', compact('lokers', 'categories', 'carousel'));
     }
 
 
