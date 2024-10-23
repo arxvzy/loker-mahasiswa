@@ -4,26 +4,17 @@
     <div class="mx-auto w-11/12 flex justify-between mt-4 text-sm">
         <div class="lg:w-7/12 w-full flex flex-col gap-y-4 min-h-screen bg-white rounded-lg shadow-md p-4 hover:shadow-xl">
             <div class="w-11/12 mx-auto py-10">
-                {{-- @foreach ($loker->images as $image) --}}
-                {{-- <div class="w-3/4 mx-auto items-center">
-                        <img class="min-w-full" src="/images/{{ $image->image_link }}" alt="" />
-                    </div> --}}
-                {{-- @endforeach --}}
-                @if (count($loker->images) > 1)
-                    <div class="carousel w-full">
-                        @for ($i = 1; $i <= count($loker->images); $i++)
-                            <div id="slide{{ $i }}" class="carousel-item relative w-full">
-                                <img src="/images/{{ $loker->images[$i - 1]->image_link }}" class="object-contain" />
-                                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                                    <a href="#slide{{ $i - 1 }}" class="btn btn-circle opacity-50">❮</a>
-                                    <a href="#slide{{ $i + 1 }}" class="btn btn-circle opacity-50">❯</a>
-                                </div>
-                            </div>
-                        @endfor
+                <div id="detail-slide" class="splide">
+                    <div class="splide__track mx-12 pb-10">
+                        <ul class="splide__list">
+                            @foreach ($loker->images as $image)
+                                <li class="splide__slide">
+                                    <img data-splide-lazy="/images/{{ $image->image_link }}" class="object-contain" />
+                                </li>
+                            @endforeach
+                        </ul>
                     </div>
-                @else
-                    <img class="object-contain" src="/images/{{ $loker->images[0]->image_link }}" alt="" />
-                @endif
+                </div>
                 <h3 class="mt-10 font-bold text-base">{{ $loker->nama_perusahaan }}</h3>
                 <h5 class="text-gray-500">Membuka Lowongan</h5>
                 <h2 class="text-2xl font-bold text-secondary">{{ $loker->posisi }}</h2>
@@ -114,4 +105,22 @@
         <x-sidebar :categories="$categories"
             class="lg:w-2/5 max-h-screen hidden lg:block bg-white rounded-lg p-4 shadow hover:shadow-lg" />
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var splide = new Splide('#detail-slide', {
+                type: 'slide',
+                perPage: 1,
+                autoplay: true,
+                lazyLoad: 'nearby',
+            });
+            splide.on('pagination:mounted', function(data) {
+                data.list.classList.add('splide__pagination--custom');
+
+                data.items.forEach(function(item) {
+                    item.button.textContent = String(item.page + 1);
+                });
+            });
+            splide.mount();
+        });
+    </script>
 @endsection
