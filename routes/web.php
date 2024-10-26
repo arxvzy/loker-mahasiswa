@@ -12,5 +12,8 @@ Route::get('/pasang-loker', function (){
 Route::get('/tentang-kami', function() {
     return view('loker.about');
 });
+Route::get('/kontak', function() {
+    return view('loker.contact');
+});
 Route::get('/artikel', [ArticleController::class, 'index']);
 Route::get('/artikel/{slug}', [ArticleController::class, 'show'])->name('article.show');
