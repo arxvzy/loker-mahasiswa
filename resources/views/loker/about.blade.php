@@ -4,10 +4,9 @@
 @section('content')
     <div class="bg-white mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 rounded-lg shadow-lg">
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
-            <div class="relative my-auto h-64 overflow-hidden rounded-lg sm:h-80 lg:order-last lg:h-full bg-teal-200">
-                <img alt="" src="images/section.jpg" class="my-auto h-full w-full object-cover" />
+            <div class="my-auto h-64 overflow-hidden rounded-lg sm:h-80 lg:order-last lg:h-full bg-teal-200">
+                <img alt="" src="/images/section.jpg" class="my-auto h-full w-full object-cover" />
             </div>
-
             <div class=" mx-10">
                 <h2 class="text-3xl font-bold sm:text-4xl">Loker Mahasiswa</h2>
                 <p class="mt-4 text-gray-600">
